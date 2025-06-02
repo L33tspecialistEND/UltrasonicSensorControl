@@ -3,7 +3,7 @@
 #include <cerrno>
 
 UltrasonicSensor::UltrasonicSensor(const std::string& port, int baud_rate, char parity, int data_bits, int stop_bits)
-    : port_(port), ctx_(nullptr)
+    : port_(port), ctx_(nullptr), is_connected_(false)
 {
     // Create a new modbus RTU context
     ctx_ = modbus_new_rtu(port_.c_str(), baud_rate, parity, data_bits, stop_bits);
@@ -34,4 +34,13 @@ bool UltrasonicSensor::connect()
     }
     std::cout << "Successfully connected to Modbus RTU on port " << port_ << '\n';
     return true;
+}
+
+void UltrasonicSensor::disconnect()
+{
+    if (ctx_ != nullptr)
+    {
+        modbus_close(ctx_);     // Close the modbus connection
+        std::cout << "Disconnected from Modbus RTU on port " << port_ << '\n';
+    }
 }

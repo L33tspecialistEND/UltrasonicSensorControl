@@ -34,6 +34,7 @@ class UltrasonicSensor
     private:
         std::string port_;
         modbus_t* ctx_;
+        bool is_connected_;     // Internal check for if Modbus is connected
 };
 
 #endif
