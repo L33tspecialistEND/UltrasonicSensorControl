@@ -13,7 +13,7 @@ UltrasonicSensor::UltrasonicSensor(const std::string& port, int baud_rate, char 
 
 UltrasonicSensor::~UltrasonicSensor()
 {
-    disconnect();
+    disconnect();   // Ensures the Modbus context is disconnected
     if (is_initialised())
     {
         modbus_free(ctx_);
@@ -49,6 +49,7 @@ void UltrasonicSensor::disconnect()
     {
         modbus_close(ctx_);     // Close the modbus connection
         std::cout << "Disconnected from Modbus RTU on port " << port_ << '\n';
+        is_connected_ = false;
     }
 }
 
