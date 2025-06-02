@@ -18,6 +18,9 @@ class UltrasonicSensor
         // Destructor: Cleans up Modbus resources
         ~UltrasonicSensor();
 
+        // Check if Modbus context is initialised
+        bool is_initialised();
+
         // Connects to the Modbus RTU bus
         // Returns true on success, false on failure
         bool connect();

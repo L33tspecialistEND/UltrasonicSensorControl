@@ -7,22 +7,28 @@ UltrasonicSensor::UltrasonicSensor(const std::string& port, int baud_rate, char 
 {
     // Create a new modbus RTU context
     ctx_ = modbus_new_rtu(port_.c_str(), baud_rate, parity, data_bits, stop_bits);
-    if (ctx_ == nullptr)
+    if (!is_initialised())
         std::cerr << "Error: Unable to create the libmodus context for port " << port_ << '\n';
 }
 
 UltrasonicSensor::~UltrasonicSensor()
 {
-    if (ctx_ != nullptr)
+    disconnect();
+    if (is_initialised())
     {
         modbus_free(ctx_);
         ctx_ = nullptr;
     }       
 }
 
+bool UltrasonicSensor::is_initialised()
+{
+    return !(ctx_ == nullptr);
+}
+
 bool UltrasonicSensor::connect()
 {
-    if (ctx_ == nullptr)
+    if (!is_initialised())
     {
         std::cerr << "Error: Modbus context not initialised. Cannot connect.\n";
         return false;
@@ -39,7 +45,7 @@ bool UltrasonicSensor::connect()
 
 void UltrasonicSensor::disconnect()
 {
-    if (ctx_ != nullptr)
+    if (is_initialised())
     {
         modbus_close(ctx_);     // Close the modbus connection
         std::cout << "Disconnected from Modbus RTU on port " << port_ << '\n';
@@ -48,7 +54,7 @@ void UltrasonicSensor::disconnect()
 
 bool UltrasonicSensor::read_distance(int slave_id, uint16_t& distance_mm)
 {
-    if (ctx_ == nullptr)
+    if (!is_initialised())
     {
         std::cerr << "Error: Modbus context not initialised.\n";
         return false;
