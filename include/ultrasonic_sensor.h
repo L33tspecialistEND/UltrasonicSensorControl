@@ -9,8 +9,7 @@
  * @brief Represents an ultrasonic sensor communicating via Modbus RTU.
  *
  * This class provides an interface to connect to an ultrasonic sensor
- * over a serial Modbus RTU bus and read distance measurements. It encapsulates
- * the Modbus context management and communication details.
+ * over a serial Modbus RTU bus and read distance measurements.
  */
 class UltrasonicSensor
 {
@@ -32,13 +31,13 @@ public:
     /**
      * @brief Destroys the UltrasonicSensor object and cleans up Modbus resources.
      *
-     * This destructor automatically disconnects from the Modbus bus if a connection
+     * This destructor disconnects from the Modbus bus if a connection
      * is active and frees the Modbus context.
      */
     ~UltrasonicSensor();
 
     /**
-     * @brief Checks if the Modbus context has been successfully initialized.
+     * @brief Checks if the Modbus context has been initialized.
      *
      * This method indicates whether the internal Modbus context (`ctx_`) is valid
      * and ready for connection attempts.
@@ -61,7 +60,6 @@ public:
      * @brief Disconnects from the Modbus RTU bus.
      *
      * Closes the serial port and frees Modbus connection resources.
-     * It's safe to call this method even if not currently connected.
      */
     void disconnect();
 
@@ -69,21 +67,19 @@ public:
      * @brief Reads the distance from a specific ultrasonic sensor.
      *
      * This function sends a Modbus read holding registers request to the specified
-     * sensor and retrieves its distance measurement. The sensor's register address
-     * for distance is assumed to be `0x0000` (or the appropriate register).
+     * sensor and retrieves its distance measurement.
      *
      * @param slave_id The Modbus slave ID of the sensor (e.g., 1, 2, 3, or 4).
      * @param distance_mm A reference to a `uint16_t` variable where the
-     * read distance in millimeters will be stored on success.
-     * @return True on a successful read operation and data retrieval, false on failure
-     * (e.g., connection error, sensor not responding, invalid data).
+     * read distance in millimeters will be stored.
+     * @return True on a successful read, false on failure.
      */
     bool read_distance(int slave_id, uint16_t& distance_mm);
 
 private:
-    std::string port_;         ///< The serial port name (e.g., "/dev/ttyUSB0").
-    modbus_t* ctx_;            ///< Pointer to the Modbus context.
-    bool is_connected_;        ///< Internal flag indicating if the Modbus bus is currently connected.
+    std::string port_;         // The serial port name (e.g., "/dev/ttyUSB0").
+    modbus_t* ctx_;            // Pointer to the Modbus context.
+    bool is_connected_;        // Internal flag indicating if the Modbus bus is currently connected.
 
     /**
      * @brief Deleted copy constructor to prevent copying of UltrasonicSensor objects.
